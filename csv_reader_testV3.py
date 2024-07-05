@@ -72,13 +72,18 @@ def get_CMP_codes():
                         print(f"Error: Missing expected column in the CSV file - {e}")
                         logging.error(f"Missing expected column in the CSV file - {e}")
                         raise
-                        
+            #TODO: copy entire row into invalid_codes.csv so that colour and form can be accessed.           
             try:
                 if len(INVALID_CODES) != 0:
-                    with open('invalid_codes.csv', 'w') as f:
-                            writer = csv.DictWriter(f, fieldnames=["FORMATTED_BATCH_ID"])
-                            writer.writeheader()
-                            writer.writerows({"FORMATTED_BATCH_ID":i} for i in INVALID_CODES)
+                    with open('invalid_codes.csv', 'w') as target, open('shipping_export.csv', 'r') as source:
+                        reader = csv.DictReader(source)
+                        
+                        for col in reader:
+                            if col['FORMATTED_BATCH_ID'] in INVALID_CODES:
+                                    writer = csv.DictWriter(target, fieldnames = reader.fieldnames)
+                                    writer.writeheader()
+                                    writer.writerow(col)
+                
                     print(f'The following codes were invalid, so have not been processed: {INVALID_CODES}\nThese have been added to a new csv file "invalid_codes.csv" for you to correct and re-run.')  
                     logging.warning(f'The following codes were invalid, so have not been processed: {INVALID_CODES}\nThese have been added to a new csv file "invalid_codes.csv" for you to correct and re-run.')
                     
@@ -111,7 +116,7 @@ def get_phys_appearance():
                 for col in reader:
                     try:
                         if col['FORMATTED_BATCH_ID'] in CMP_CODES:
-                            APPEARANCES.append(col['COLOUR'] + col['FORM'])
+                            APPEARANCES.append(col['COLOUR'].title() + ' ' + col['FORM'].title())
                     except KeyError as e:
                         print(f"Error: Missing expected column in the CSV file - {e}")
                         logging.error(f"Missing expected column in the CSV file - {e}")
@@ -131,7 +136,6 @@ def get_phys_appearance():
 
 csv_exist()
 template_exist()
-print(CSV_FILE_EXIST)
 create_folder('MSDS pdfs')
 create_folder('MSDS raw files') 
 get_CMP_codes()
