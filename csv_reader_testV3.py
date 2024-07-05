@@ -72,7 +72,7 @@ def get_CMP_codes():
                         print(f"Error: Missing expected column in the CSV file - {e}")
                         logging.error(f"Missing expected column in the CSV file - {e}")
                         raise
-            #TODO: copy entire row into invalid_codes.csv so that colour and form can be accessed.           
+                     
             try:
                 if len(INVALID_CODES) != 0:
                     with open('invalid_codes.csv', 'w') as target, open('shipping_export.csv', 'r') as source:
@@ -105,7 +105,7 @@ def get_CMP_codes():
             print(f"An unexpected error occurred: {e}")
             logging.error(f"An unexpected error occurred: {e}")
             raise
-        
+#TODO: Is this necessary? The template formatter will only add rows if code in in CMP_CODES list. However, will need to check that there are no key errors anyway.          
 def get_phys_appearance():
     print('Reading physical appearances from csv file...')
     logging.info('Reading physical appearances from csv file...')
@@ -135,9 +135,10 @@ def get_phys_appearance():
             raise
 
 def make_doc():
-    if CMP_CODES:
-        print('Inserting CMP codes into document...')
-        logging.info('Inserting CMP codes into document...')
+    try:
+        if CMP_CODES:
+            print('Inserting CMP codes into document...')
+            logging.info('Inserting CMP codes into document...')
         try:
             for csv_file in CSV_FILE_EXIST:
                 with open(csv_file, 'r') as file: 
@@ -151,6 +152,12 @@ def make_doc():
             print('The CMP codes could not be inserted into the template.')
             logging.error(e)
             raise
+        for i in CMP_CODES:
+            PDF_NAMES.append(i +' MSDS'+'.docx')
+    except Exception as e:
+        print('The codes were not able to be added to the template. Make sure that the template contains the phrase "{{FORMATTED_BATCH_ID}}", "{{COLOUR}}" and "{{FORM}}" before re-running.')
+        logging.error(e)
+        raise
 
 csv_exist()
 template_exist()
@@ -158,3 +165,4 @@ create_folder('MSDS pdfs')
 create_folder('MSDS raw files') 
 get_CMP_codes()
 get_phys_appearance()
+make_doc()
