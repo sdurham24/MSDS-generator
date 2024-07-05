@@ -12,7 +12,7 @@ logging.basicConfig(filename="process_info.log", format='%(levelname)s:%(message
 
 CMP_CODES = []
 INVALID_CODES = []
-FILE_NAMES = []
+PDF_NAMES = []
 #cmp_file = 'shipping_export.csv'
 template = 'MSDS Template.docx'
 
@@ -76,47 +76,47 @@ class msds_generator():
     
 
    #Iterates through CMP_CODES list, and creates word docx file which inserts CMP code to template.
-    def make_doc(cmp_file):
-        if CMP_CODES:
-            print('Inserting CMP codes into document...')
-            logging.info('Inserting CMP codes into document...')
+    # def make_doc(cmp_file):
+    #     if CMP_CODES:
+    #         print('Inserting CMP codes into document...')
+    #         logging.info('Inserting CMP codes into document...')
             
-            try:
-                if not os.path.exists(cmp_file):
-                    raise FileNotFoundError(f'The file "{cmp_file}" does not exist.')
+    #         try:
+    #             if not os.path.exists(cmp_file):
+    #                 raise FileNotFoundError(f'The file "{cmp_file}" does not exist.')
                     
                 
-                try:
-                    with open(cmp_file, 'r') as file: 
-                        reader = csv.DictReader(file)
-                        doc = DocxTemplate(template)
-                        for dict in reader:
-                          doc.render(dict)
-                        for code in CMP_CODES:
-                            doc.save(code +' MSDS'+'.docx')
-                except Exception as e:
-                    print('The CMP codes could not be inserted into the template.')
-                    logging.error(e)
-                    raise
+    #             try:
+    #                 with open(cmp_file, 'r') as file: 
+    #                     reader = csv.DictReader(file)
+    #                     doc = DocxTemplate(template)
+    #                     for dict in reader:
+    #                       doc.render(dict)
+    #                     for code in CMP_CODES:
+    #                         doc.save(code +' MSDS'+'.docx')
+    #             except Exception as e:
+    #                 print('The CMP codes could not be inserted into the template.')
+    #                 logging.error(e)
+    #                 raise
     
                     
-                for i in CMP_CODES:
-                    FILE_NAMES.append(i +' MSDS'+'.docx')
-            except Exception as e:
-                print('The codes were not able to be added to the template. Make sure that the template contains the phrase "{{FORMATTED_BATCH_ID}}" before re-running.')
-                logging.error(e)
-                raise
+    #             for i in CMP_CODES:
+    #                 PDF_NAMES.append(i +' MSDS'+'.docx')
+    #         except Exception as e:
+    #             print('The codes were not able to be added to the template. Make sure that the template contains the phrase "{{FORMATTED_BATCH_ID}}" before re-running.')
+    #             logging.error(e)
+    #             raise
             
     #Converts docx to pdf file.        
-    def convert_to_pdf():
-        print('Converting docx to pdf...')
-        logging.info('Converting docx to pdf...')
-        try:
-            for i in FILE_NAMES:
-                convert(i)
-        except Exception as e:
-            logging.error(e)
-            raise
+    # def convert_to_pdf():
+    #     print('Converting docx to pdf...')
+    #     logging.info('Converting docx to pdf...')
+    #     try:
+    #         for i in PDF_NAMES:
+    #             convert(i)
+    #     except Exception as e:
+    #         logging.error(e)
+    #         raise
         
     #Moves files to new folder
     def move_files():
