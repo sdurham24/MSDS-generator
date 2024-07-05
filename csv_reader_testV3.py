@@ -134,6 +134,24 @@ def get_phys_appearance():
             logging.error(f"An unexpected error occurred: {e}")
             raise
 
+def make_doc():
+    if CMP_CODES:
+        print('Inserting CMP codes into document...')
+        logging.info('Inserting CMP codes into document...')
+        try:
+            for csv_file in CSV_FILE_EXIST:
+                with open(csv_file, 'r') as file: 
+                    reader = csv.DictReader(file)
+                    doc = DocxTemplate(template)
+                    for dict in reader:
+                        doc.render(dict)
+                    for code in CMP_CODES:
+                        doc.save(code +' MSDS'+'.docx')
+        except Exception as e:
+            print('The CMP codes could not be inserted into the template.')
+            logging.error(e)
+            raise
+
 csv_exist()
 template_exist()
 create_folder('MSDS pdfs')
