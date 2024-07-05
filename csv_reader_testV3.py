@@ -15,11 +15,14 @@ CSV_FILE_EXIST = []
 TEMPLATE = 'MSDS Template.docx'
 CMP_CODES = []
 INVALID_CODES = []
+APPEARANCES = []
 PDF_NAMES = []
 
 
 #Check a valid csv file exists in current folder
 def csv_exist():
+    print('Checking csv file exists in folder...')
+    logging.info('Checking csv file exists in folder...')
     try:
         for name in CSV_FILE_CHECK:
             if os.path.exists(name):
@@ -33,6 +36,8 @@ def csv_exist():
 
 #Check a valid template exists in current folder
 def template_exist():
+    print('Checking template exists in folder...')
+    logging.info('Checking template exists in folder...')
     try:
         if not os.path.exists(TEMPLATE):
             raise FileNotFoundError(f'The file "{TEMPLATE}" does not exist.')
@@ -43,14 +48,18 @@ def template_exist():
 
 #Creates folders to hold pdfs and other raw files
 def create_folder(folder_path):
+    print('Creating folders...')
+    logging.info('Creating folders...')
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
 
+#Checks list of available csvs, then reads and appends cmp code to list. If there are invalid codes, they are added to a new csv names accordingly.
 def get_CMP_codes():
-    global CMP_FILE_EXIST
-    for csv in CMP_FILE_EXIST:
+    print('Reading CMP codes from csv file...')
+    logging.info('Reading CMP codes from csv file...')
+    for csv_file in CSV_FILE_EXIST:
         try:
-            with open(csv, 'r') as file: 
+            with open(csv_file, 'r') as file: 
                 reader = csv.DictReader(file)
                 for col in reader:
                     try:
@@ -84,8 +93,8 @@ def get_CMP_codes():
             logging.error(e)
             raise
         except IOError as e:
-            print(f"Error reading {csv}: {e}")
-            logging.error(f"Error reading {csv}: {e}")
+            print(f"Error reading {csv_file}: {e}")
+            logging.error(f"Error reading {csv_file}: {e}")
             raise
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
@@ -93,7 +102,32 @@ def get_CMP_codes():
             raise
         
 def get_phys_appearance():
-    pass
+    print('Reading physical appearances from csv file...')
+    logging.info('Reading physical appearances from csv file...')
+    for csv_file in CSV_FILE_EXIST:
+        try:
+            with open(csv_file, 'r') as file: 
+                reader = csv.DictReader(file)
+                for col in reader:
+                    try:
+                        if col['FORMATTED_BATCH_ID'] in CMP_CODES:
+                            APPEARANCES.append(col['COLOUR'] + col['FORM'])
+                    except KeyError as e:
+                        print(f"Error: Missing expected column in the CSV file - {e}")
+                        logging.error(f"Missing expected column in the CSV file - {e}")
+                        raise
+        except FileNotFoundError as e:
+            print(e)
+            logging.error(e)
+            raise
+        except IOError as e:
+            print(f"Error reading {csv_file}: {e}")
+            logging.error(f"Error reading {csv_file}: {e}")
+            raise
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+            logging.error(f"An unexpected error occurred: {e}")
+            raise
 
 csv_exist()
 template_exist()
