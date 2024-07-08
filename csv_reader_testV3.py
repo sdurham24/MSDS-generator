@@ -48,8 +48,8 @@ def template_exist():
 
 #Creates folders to hold pdfs and other raw files
 def create_folder(folder_path):
-    print('Creating folders...')
-    logging.info('Creating folders...')
+    print(f'Creating folder "{folder_path}"...')
+    logging.info(f'Creating folder "{folder_path}"...')
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
 
@@ -192,7 +192,7 @@ def move_files():
 
         for file in files_to_move:
             try:
-                if file.endswith('docx'):
+                if file != 'MSDS Template.docx' and file.endswith('docx'):
                     source_path = os.path.join(source_dir, file)
                     raw_path = os.path.join(raw_dir, file)
                     shutil.move(source_path, raw_path)
@@ -223,8 +223,8 @@ create_folder('MSDS pdfs')
 create_folder('MSDS raw files') 
 get_CMP_codes()
 get_phys_appearance()
-make_doc()
-convert_to_pdf()
+#make_doc()
+#convert_to_pdf()
 move_files()
 
 print('Process complete.')
