@@ -105,7 +105,7 @@ def get_CMP_codes():
             print(f"An unexpected error occurred: {e}")
             logging.error(f"An unexpected error occurred: {e}")
             raise
-#TODO: Is this necessary? The template formatter will only add rows if code in in CMP_CODES list. However, will need to check that there are no key errors anyway.          
+#TODO: Is this necessary? The template formatter will only add rows if code is in CMP_CODES list. However, will need to check that there are no key errors anyway.          
 def get_phys_appearance():
     print('Reading physical appearances from csv file...')
     logging.info('Reading physical appearances from csv file...')
@@ -159,6 +159,17 @@ def make_doc():
         logging.error(e)
         raise
 
+#Converts docx to pdf file.        
+def convert_to_pdf():
+    print('Converting docx to pdf...')
+    logging.info('Converting docx to pdf...')
+    try:
+        for i in PDF_NAMES:
+            convert(i)
+    except Exception as e:
+        logging.error(e)
+        raise
+    
 csv_exist()
 template_exist()
 create_folder('MSDS pdfs')
