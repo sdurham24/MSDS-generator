@@ -209,6 +209,11 @@ def move_files():
             logging.error('Documents could not be moved into MSDS raw files folder')
             raise    
 
+def exit():
+        input('Press ENTER to exit\n')
+        logging.info('Process exited.')
+        sys.exit()
+
 csv_exist()
 template_exist()
 create_folder('MSDS pdfs')
@@ -218,3 +223,7 @@ get_phys_appearance()
 make_doc()
 convert_to_pdf()
 move_files()
+
+print('Process complete.')
+logging.info('Process complete.')
+exit()
