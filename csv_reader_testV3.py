@@ -4,8 +4,8 @@ import logging
 import sys
 import os
 import shutil
-# from docxtpl import DocxTemplate
-# from docx2pdf import convert
+from docxtpl import DocxTemplate
+from docx2pdf import convert
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename="process_info.log", format='%(levelname)s:%(message)s', encoding='utf-8', level=logging.DEBUG)
@@ -116,7 +116,7 @@ def get_phys_appearance():
                 for col in reader:
                     try:
                         if col['FORMATTED_BATCH_ID'] in CMP_CODES:
-                            APPEARANCES.append(col['COLOUR'].title() + ' ' + col['FORM'].title())
+                            APPEARANCES.append(col['COLOUR'].title() + ' ' + col['FORM_'].title())
                     except KeyError as e:
                         print(f"Error: Missing expected column in the CSV file - {e}")
                         logging.error(f"Missing expected column in the CSV file - {e}")
