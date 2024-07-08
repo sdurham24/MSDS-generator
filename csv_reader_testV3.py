@@ -137,8 +137,8 @@ def get_phys_appearance():
 def make_doc():
     try:
         if CMP_CODES:
-            print('Inserting CMP codes into document...')
-            logging.info('Inserting CMP codes into document...')
+            print('Inserting data into template...')
+            logging.info('Inserting data into template...')
         try:
             for csv_file in CSV_FILE_EXIST:
                 with open(csv_file, 'r') as file: 
@@ -149,13 +149,13 @@ def make_doc():
                     for code in CMP_CODES:
                         doc.save(code +' MSDS'+'.docx')
         except Exception as e:
-            print('The CMP codes could not be inserted into the template.')
+            print('The data could not be inserted into the template.')
             logging.error(e)
             raise
         for i in CMP_CODES:
             PDF_NAMES.append(i +' MSDS'+'.docx')
     except Exception as e:
-        print('The codes were not able to be added to the template. Make sure that the template contains the phrase "{{FORMATTED_BATCH_ID}}", "{{COLOUR}}" and "{{FORM}}" before re-running.')
+        print('The data could not be added to the template. Make sure that the template contains the phrase "{{FORMATTED_BATCH_ID}}", "{{COLOUR}}" and "{{FORM}}" before re-running.')
         logging.error(e)
         raise
 
@@ -172,42 +172,45 @@ def convert_to_pdf():
 
 #Moves pdf files to folder, and all other raw files to separate folder. This reduces problems if any of the csv files need to be re-run.
 def move_files():
-    print('Attempting to move pdf files to folder "MSDS pdfs"...')
-    logging.info('Attempting to move pdf files to folder "MSDS pdfs"...')
+    print('Attempting to move files to appropriate folders...')
+    logging.info('Attempting to move files to appropriate folders...')
     source_dir = os.getcwd()
     pdf_dir = 'MSDS pdfs'
     raw_dir = 'MSDS raw files'
     files_to_move = os.listdir(source_dir)
-       
-    for file in files_to_move:
-        try:
-            if file.endswith('pdf'):
-                source_path = os.path.join(source_dir, file)
-                pdf_path = os.path.join(pdf_dir, file)
-                shutil.move(source_path, pdf_path)
-             
-        except FileNotFoundError:
-            logging.error('There are no pdf files in the current folder.')
-            raise
+    try:   
+        for file in files_to_move:
+            try:
+                if file.endswith('pdf'):
+                    source_path = os.path.join(source_dir, file)
+                    pdf_path = os.path.join(pdf_dir, file)
+                    shutil.move(source_path, pdf_path)
+                
+            except FileNotFoundError:
+                logging.error('There are no pdf files in the current folder.')
+                raise
 
-    for file in files_to_move:
-        try:
-            if file.endswith('docx'):
-                source_path = os.path.join(source_dir, file)
-                raw_path = os.path.join(raw_dir, file)
-                shutil.move(source_path, raw_path)
-            elif file == 'shipping_export.csv': 
-                source_path = os.path.join(source_dir, file)
-                raw_path = os.path.join(raw_dir, file)
-                shutil.move(source_path, raw_path)   
-            elif file.endswith('log'):   
-                source_path = os.path.join(source_dir, file)
-                raw_path = os.path.join(raw_dir, file)
-                shutil.move(source_path, raw_path)
-                    
-        except FileNotFoundError:
-            logging.error('Documents could not be moved into MSDS raw files folder')
-            raise    
+        for file in files_to_move:
+            try:
+                if file.endswith('docx'):
+                    source_path = os.path.join(source_dir, file)
+                    raw_path = os.path.join(raw_dir, file)
+                    shutil.move(source_path, raw_path)
+                elif file == 'shipping_export.csv': 
+                    source_path = os.path.join(source_dir, file)
+                    raw_path = os.path.join(raw_dir, file)
+                    shutil.move(source_path, raw_path)   
+                elif file.endswith('log'):   
+                    source_path = os.path.join(source_dir, file)
+                    raw_path = os.path.join(raw_dir, file)
+                    shutil.move(source_path, raw_path)
+                        
+            except FileNotFoundError:
+                logging.error('Documents could not be moved into MSDS raw files folder')
+                raise    
+    except Exception as e:
+        logging.error(e)
+        raise
 
 def exit():
         input('Press ENTER to exit\n')
