@@ -169,7 +169,46 @@ def convert_to_pdf():
     except Exception as e:
         logging.error(e)
         raise
-    
+
+#Moves pdf files to folder, and all other raw files to separate folder. This reduces problems if any of the csv files need to be re-run.
+def move_files():
+    print('Attempting to move pdf files to folder "MSDS pdfs"...')
+    logging.info('Attempting to move pdf files to folder "MSDS pdfs"...')
+    source_dir = os.getcwd()
+    pdf_dir = 'MSDS pdfs'
+    raw_dir = 'MSDS raw files'
+    files_to_move = os.listdir(source_dir)
+       
+    for file in files_to_move:
+        try:
+            if file.endswith('pdf'):
+                source_path = os.path.join(source_dir, file)
+                pdf_path = os.path.join(pdf_dir, file)
+                shutil.move(source_path, pdf_path)
+             
+        except FileNotFoundError:
+            logging.error('There are no pdf files in the current folder.')
+            raise
+
+    for file in files_to_move:
+        try:
+            if file.endswith('docx'):
+                source_path = os.path.join(source_dir, file)
+                raw_path = os.path.join(raw_dir, file)
+                shutil.move(source_path, raw_path)
+            elif file == 'shipping_export.csv': 
+                source_path = os.path.join(source_dir, file)
+                raw_path = os.path.join(raw_dir, file)
+                shutil.move(source_path, raw_path)   
+            elif file.endswith('log'):   
+                source_path = os.path.join(source_dir, file)
+                raw_path = os.path.join(raw_dir, file)
+                shutil.move(source_path, raw_path)
+                    
+        except FileNotFoundError:
+            logging.error('Documents could not be moved into MSDS raw files folder')
+            raise    
+
 csv_exist()
 template_exist()
 create_folder('MSDS pdfs')
@@ -177,3 +216,5 @@ create_folder('MSDS raw files')
 get_CMP_codes()
 get_phys_appearance()
 make_doc()
+convert_to_pdf()
+move_files()
