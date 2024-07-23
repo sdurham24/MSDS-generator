@@ -63,7 +63,7 @@ def get_CMP_codes():
                 reader = csv.DictReader(file)
                 for col in reader:
                     try:
-                        if re.search('CMP-.{8}-.{3}', col['FORMATTED_BATCH_ID']):
+                        if re.match(r'^CMP-\d{8}-\d{3}$', col['FORMATTED_BATCH_ID']):
                             CMP_CODES.append(col['FORMATTED_BATCH_ID']) 
                             print(CMP_CODES)
                         else:
@@ -77,12 +77,11 @@ def get_CMP_codes():
                 if len(INVALID_CODES) != 0:
                     with open('invalid_codes.csv', 'w') as target, open('shipping_export.csv', 'r') as source:
                         reader = csv.DictReader(source)
-                        
+                        writer = csv.DictWriter(target, fieldnames = reader.fieldnames)
+                        writer.writeheader()
                         for col in reader:
                             if col['FORMATTED_BATCH_ID'] in INVALID_CODES:
-                                    writer = csv.DictWriter(target, fieldnames = reader.fieldnames)
-                                    writer.writeheader()
-                                    writer.writerow(col)
+                                writer.writerow(col)
                 
                     print(f'The following codes were invalid, so have not been processed: {INVALID_CODES}\nThese have been added to a new csv file "invalid_codes.csv" for you to correct and re-run.')  
                     logging.warning(f'The following codes were invalid, so have not been processed: {INVALID_CODES}\nThese have been added to a new csv file "invalid_codes.csv" for you to correct and re-run.')
