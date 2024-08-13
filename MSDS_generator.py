@@ -86,8 +86,8 @@ def get_CMP_codes():
                             if col['FORMATTED_BATCH_ID'] in INVALID_CODES:
                                 writer.writerow(col)
                 
-                    print(f'The following codes were invalid, so have not been processed: {INVALID_CODES}\nThese have been added to a new csv file "invalid_codes.csv" for you to correct and re-run.')  
-                    logging.warning(f'The following codes were invalid, so have not been processed: {INVALID_CODES}\nThese have been added to a new csv file "invalid_codes.csv" for you to correct and re-run.')
+                    print(f'The following codes were invalid, so have not been processed: {INVALID_CODES}\nThese have been added to a new csv file "invalid_codes.csv" for you to correct and re-run. Ensure to rename the file as "shipping_export.csv" before re-running.')  
+                    logging.warning(f'The following codes were invalid, so have not been processed: {INVALID_CODES}\nThese have been added to a new csv file "invalid_codes.csv" for you to correct and re-run. Ensure to rename the file as "shipping_export.csv" before re-running.')
                     
 
             except IOError as e:
@@ -119,8 +119,8 @@ def get_phys_appearance():
                     try:
                         if col['FORMATTED_BATCH_ID'] in CMP_CODES.items():
                             if not col['COLOUR'] or not col['FORM_']:
-                                print(f"There are blank cells in the shipping_export file for {col['FORMATTED_BATCH_ID']}")
-                                logging.error(f"There are blank cells in the shipping_export file for {col['FORMATTED_BATCH_ID']}")
+                                print(f"There are blank cells in the shipping_export file for {col['FORMATTED_BATCH_ID']}. Please open the file and check for further blank cells, as there may be more.")
+                                logging.error(f"There are blank cells in the shipping_export file for {col['FORMATTED_BATCH_ID']}. Please open the file and check for further blank cells, as there may be more.")
                                 raise KeyError
                                 
                             else:
