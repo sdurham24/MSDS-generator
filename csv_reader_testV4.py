@@ -4,8 +4,8 @@ import logging
 import sys
 import os
 import shutil
-#from docxtpl import DocxTemplate
-#from docx2pdf import convert
+from docxtpl import DocxTemplate
+from docx2pdf import convert
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename="process_info.log", format='%(levelname)s:%(message)s', encoding='utf-8', level=logging.DEBUG)
@@ -63,7 +63,7 @@ def get_CMP_codes():
                 reader = csv.DictReader(file)
                 for col in reader:
                     try:
-                        if re.match(r'^CMP-\d{8}-\d{3}$', col['FORMATTED_BATCH_ID']):
+                        if re.search('CMP-.{8}-.{3}', col['FORMATTED_BATCH_ID']):
                             CMP_CODES.append(col['FORMATTED_BATCH_ID']) 
                             print(CMP_CODES)
                         else:
@@ -77,11 +77,12 @@ def get_CMP_codes():
                 if len(INVALID_CODES) != 0:
                     with open('invalid_codes.csv', 'w') as target, open('shipping_export.csv', 'r') as source:
                         reader = csv.DictReader(source)
-                        writer = csv.DictWriter(target, fieldnames = reader.fieldnames)
-                        writer.writeheader()
+                        
                         for col in reader:
                             if col['FORMATTED_BATCH_ID'] in INVALID_CODES:
-                                writer.writerow(col)
+                                    writer = csv.DictWriter(target, fieldnames = reader.fieldnames)
+                                    writer.writeheader()
+                                    writer.writerow(col)
                 
                     print(f'The following codes were invalid, so have not been processed: {INVALID_CODES}\nThese have been added to a new csv file "invalid_codes.csv" for you to correct and re-run.')  
                     logging.warning(f'The following codes were invalid, so have not been processed: {INVALID_CODES}\nThese have been added to a new csv file "invalid_codes.csv" for you to correct and re-run.')
@@ -221,8 +222,8 @@ create_folder('MSDS pdfs')
 create_folder('MSDS raw files') 
 get_CMP_codes()
 get_phys_appearance()
-#make_doc()
-#convert_to_pdf()
+make_doc()
+convert_to_pdf()
 move_files()
 
 print('Process complete.')
