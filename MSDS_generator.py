@@ -202,10 +202,11 @@ def move_files():
                     source_path = os.path.join(source_dir, file)
                     raw_path = os.path.join(raw_dir, file)
                     shutil.move(source_path, raw_path)
-                elif file == 'shipping_export.csv': 
+                elif file == 'shipping_export.csv':
                     source_path = os.path.join(source_dir, file)
                     raw_path = os.path.join(raw_dir, file)
-                    shutil.move(source_path, raw_path)   
+                    if file not in source_path:
+                        shutil.move(source_path, raw_path)   
                                 
                         
             except FileNotFoundError:
