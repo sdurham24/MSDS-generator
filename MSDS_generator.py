@@ -19,7 +19,7 @@ APPEARANCES = []
 PDF_NAMES = []
 
 
-#Check a valid csv file exists in current folder
+#Check a valid shipping_export.csv file exists in current folder
 def csv_exist():
     print('Checking csv file exists in folder...')
     logging.info('Checking csv file exists in folder...')
@@ -34,7 +34,7 @@ def csv_exist():
         logging.error(e)
         raise
 
-#Check a valid template exists in current folder
+#Check a valid MSDS Template.docx file exists in current folder
 def template_exist():
     print('Checking template exists in folder...')
     logging.info('Checking template exists in folder...')
@@ -53,7 +53,7 @@ def create_folder(folder_path):
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
 
-#Checks list of available csvs, then reads and appends cmp code to list. If there are invalid codes, they are added to a new csv names accordingly.
+#Checks list of available csvs, then reads and appends FORMATTED_BATCH_ID to list. If there are invalid codes, they are added to a new csv names accordingly.
 def get_CMP_codes():
     print('Reading CMP codes from csv file...')
     logging.info('Reading CMP codes from csv file...')
@@ -142,6 +142,7 @@ def get_phys_appearance():
             logging.error(f"An unexpected error occurred: {e}")
             raise
 
+#Renders template with info in CMP_CODES dictionary.
 def make_doc():
     try:
         if CMP_CODES:
@@ -160,7 +161,7 @@ def make_doc():
         for i in CMP_CODES:
             PDF_NAMES.append(i +' MSDS'+'.docx')
     except Exception as e:
-        print('The data could not be added to the template. Make sure that the template contains the phrase "{{FORMATTED_BATCH_ID}}", "{{COLOUR}}" and "{{FORM}}" before re-running.')
+        print('The data could not be added to the template.')
         logging.error(e)
         raise
 
@@ -205,10 +206,9 @@ def move_files():
                 elif file == 'shipping_export.csv':
                     source_path = os.path.join(source_dir, file)
                     raw_path = os.path.join(raw_dir, file)
-                    if file not in source_path:
+                    if not os.path.exists(raw_path):
                         shutil.move(source_path, raw_path)   
-                                
-                        
+                                                        
             except FileNotFoundError:
                 logging.error('Documents could not be moved into MSDS raw files folder')
                 raise    
@@ -217,8 +217,8 @@ def move_files():
         raise
 
 def exit():
-        input('Press ENTER to exit\n')
-        sys.exit()
+    input('Press ENTER to exit\n')
+    sys.exit()
 
 csv_exist()
 template_exist()
