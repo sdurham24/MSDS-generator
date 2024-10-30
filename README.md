@@ -10,4 +10,6 @@ The fields the programme specifically inserts into the template are 'FORMATTED_B
 
 The entire process is logged in 'process_info.log' to track any errors and when these might have occurred.
 
+The script should be run from the directory in which the shipping_export CSV exists and the generated files will be created.
+
 The requirements file can be found in this repository.
