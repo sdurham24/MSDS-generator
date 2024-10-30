@@ -8,8 +8,8 @@ The code requires the CSV file to have a specific name to read from, either 'shi
 
 The fields the programme specifically inserts into the template are 'FORMATTED_BATCH_ID', 'COLOR', and 'FORM_'. In the absence of correctly formatted data in these fields, the programme will not run.
 
-The entire process is logged in 'process_info.log' to track any errors and when these might have occurred.
+💾 The entire process is logged in 'process_info.log' to track any errors and when these might have occurred.
 
-The script should be run from the directory in which the shipping_export CSV exists and the generated files will be created.
+📂 The script should be run from the directory in which the shipping_export CSV exists and the generated files will be created.
 
-The requirements file can be found in this repository.
+📝 The requirements file can be found in this repository.
